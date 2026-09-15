@@ -1,44 +1,40 @@
-
-function divide(arr) {
-    if (arr.length == 1) {
+function divide(arr , low = 0 , high = arr.length - 1) {
+    if(low >= high) {
         return arr;
     }
-
-    let mid = Math.floor(arr.length / 2);
-    let left = arr.slice(0, mid);
-    let right = arr.slice(mid);
-    divide(left);
-    divide(right);
-    merge(arr,left , right);
+    let mid = Math.floor((low + high) / 2);
+    
+    divide(arr , low, mid);
+    divide(arr, mid+1, high);
+    return merge(arr, low, mid, high);
 }
-function merge(arr, left, right) {
-    let i = 0;
-    let j = 0;
-    let k = 0;
-    while (i < left.length && j < right.length) {
+function merge(arr, low, mid, high) {
+    let left = arr.slice(low, mid + 1);
+    let right = arr.slice(mid + 1, high + 1);
+    let i = 0, j = 0, k = low;
+    while(i < left.length && j < right.length) {
         if(left[i] < right[j]) {
-            arr[k] = left[i];
-            k++;
+            arr[ k] = left[i];
             i++;
-        }
-        if(left[i] > right[j]) {
-            arr[k] = right[j];
             k++;
+        } else {
+            arr[k] = right[j];
             j++;
+            k++;
         }
+        
     }
-    while (i < left.length) {
-        arr[k] = left[i];
-        k++;
+    while(i < left.length) {
+        arr[ k] = left[i];
         i++;
+        k++;
     }
     while(j < right.length) {
-        arr[k] = right[j];
-        k++;
+        arr[ k] = right[j];
         j++;
+        k++;
     }
-    return arr;
+    return arr;         
 }
-let arr = [32, 45,67, 23, 1, 4, 5, 6, 7, 8, 9];
-divide(arr);
-console.log(arr);
+let arr = [3, 6, 8, 1, 2, 5, 4, 7];
+console.log(divide(arr));
